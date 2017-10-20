@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etc.dao.AdminsMapper">
+  <resultMap id="BaseResultMap" type="com.etc.entity.Admins">
+    <id column="Adminid" jdbcType="INTEGER" property="adminid" />
+    <result column="Adminno" jdbcType="VARCHAR" property="adminno" />
+    <result column="Adminpwd" jdbcType="VARCHAR" property="adminpwd" />
+    <result column="Adminname" jdbcType="VARCHAR" property="adminname" />
+    <result column="Adminphone" jdbcType="VARCHAR" property="adminphone" />
+    <result column="Adminsex" jdbcType="VARCHAR" property="adminsex" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    Adminid, Adminno, Adminpwd, Adminname, Adminphone, Adminsex
+  </sql>
+  
+  <!-- 查询管理员 -->
+ <select id="selectAllAdmins" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from admins
+  </select>
+  <!-- 根据主键删除管理员 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from admins
+    where Adminid = #{adminid,jdbcType=INTEGER}
+  </delete>
+  
+   <!-- 批量删除 -->
+   <delete id="delete" parameterType="java.lang.String" >
+		delete from admins where Adminid in 
+		 <foreach item="ids" index="index" collection="array"
+      open="(" separator="," close=")">
+        #{ids}
+    </foreach>
+    </delete>
+   <!-- <insert id="insert" parameterType="com.etc.entity.Admins">
+    insert into admins (Adminid, Adminno, Adminpwd, 
+      Adminname, Adminphone, Adminsex
+      )
+    values (#{adminid,jdbcType=INTEGER}, #{adminno,jdbcType=VARCHAR}, #{adminpwd,jdbcType=VARCHAR}, 
+      #{adminname,jdbcType=VARCHAR}, #{adminphone,jdbcType=VARCHAR}, #{adminsex,jdbcType=VARCHAR}
+      )
+  </insert> -->
+  
+  <insert id="insert" parameterType="com.etc.entity.Admins">
+    insert into admins (
+      Adminname, Adminphone, Adminsex
+      )
+    values (#{adminname,jdbcType=VARCHAR}, #{adminphone,jdbcType=VARCHAR}, #{adminsex,jdbcType=VARCHAR}
+      )
+  </insert>
+  <!-- 增加管理员 -->
+  <insert id="insertSelective" parameterType="com.etc.entity.Admins">
+    insert into admins
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="adminid != null">
+        Adminid,
+      </if>
+      <if test="adminno != null">
+        Adminno,
+      </if>
+      <if test="adminpwd != null">
+        Adminpwd,
+      </if>
+      <if test="adminname != null">
+        Adminname,
+      </if>
+      <if test="adminphone != null">
+        Adminphone,
+      </if>
+      <if test="adminsex != null">
+        Adminsex,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="adminid != null">
+        #{adminid,jdbcType=INTEGER},
+      </if>
+      <if test="adminno != null">
+        #{adminno,jdbcType=VARCHAR},
+      </if>
+      <if test="adminpwd != null">
+        #{adminpwd,jdbcType=VARCHAR},
+      </if>
+      <if test="adminname != null">
+        #{adminname,jdbcType=VARCHAR},
+      </if>
+      <if test="adminphone != null">
+        #{adminphone,jdbcType=VARCHAR},
+      </if>
+      <if test="adminsex != null">
+        #{adminsex,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!--修改管理员 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.etc.entity.Admins">
+    update admins
+    <set>
+      <if test="adminno != null">
+        Adminno = #{adminno,jdbcType=VARCHAR},
+      </if>
+      <if test="adminpwd != null">
+        Adminpwd = #{adminpwd,jdbcType=VARCHAR},
+      </if>
+      <if test="adminname != null">
+        Adminname = #{adminname,jdbcType=VARCHAR},
+      </if>
+      <if test="adminphone != null">
+        Adminphone = #{adminphone,jdbcType=VARCHAR},
+      </if>
+      <if test="adminsex != null">
+        Adminsex = #{adminsex,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Adminid = #{adminid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.etc.entity.Admins">
+    update admins
+    set Adminno = #{adminno,jdbcType=VARCHAR},
+      Adminpwd = #{adminpwd,jdbcType=VARCHAR},
+      Adminname = #{adminname,jdbcType=VARCHAR},
+      Adminphone = #{adminphone,jdbcType=VARCHAR},
+      Adminsex = #{adminsex,jdbcType=VARCHAR}
+    where Adminid = #{adminid,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 自定义一个模糊查询 和分页的方法实现 -->
+	<select id="selectAdminsByPage" parameterType="com.etc.util.PageBean"
+		resultType="com.etc.entity.Admins">
+		select * from admins <where>
+		<if test="str!=null">Adminname like
+		CONCAT(CONCAT('%', #{str}),'%')</if></where> limit #{start},#{pagesize}
+	</select>
+
+
+    <!-- 查询总记录数 -->
+	<select id="selectAdminsCount" parameterType="com.etc.util.PageBean" resultType="java.lang.Integer">
+
+		select count(*) from admins 
+		<where>
+		<if test="str!=null">
+		Adminname like 
+		CONCAT(CONCAT('%',
+		#{str}),'%')
+		</if>
+		</where>
+	</select>
+	
+  
+</mapper>

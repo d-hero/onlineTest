@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etc.dao.StudentsMapper">
+  <resultMap id="BaseResultMap" type="com.etc.entity.Students">
+    <id column="Stuid" jdbcType="INTEGER" property="stuid" />
+    <result column="Stupwd" jdbcType="VARCHAR" property="stupwd" />
+    <result column="Stuno" jdbcType="VARCHAR" property="stuno" />
+    <result column="Stuname" jdbcType="VARCHAR" property="stuname" />
+    <result column="Stuphone" jdbcType="VARCHAR" property="stuphone" />
+    <result column="Stusex" jdbcType="VARCHAR" property="stusex" />
+    <result column="Stustatus" jdbcType="INTEGER" property="stustatus" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    Stuid, Stupwd, Stuno, Stuname, Stuphone, Stusex, Stustatus
+  </sql>
+  
+  <!--根据主键查询学生信息-->
+  <select id="selectAllStudent" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from students
+    <!-- where Stuid = #{stuid,jdbcType=INTEGER} -->
+  </select>
+  
+  <!--根据主键删除学生信息-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from students
+    where Stuid = #{stuid,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 批量删除 -->
+   <delete id="delete" parameterType="java.lang.String" >
+		delete from students where Stuid in 
+		 <foreach item="ids" index="index" collection="array"
+      open="(" separator="," close=")">
+        #{ids}
+    </foreach>
+    </delete>
+  
+  <!-- 增加学生信息 -->
+  <insert id="insert" parameterType="com.etc.entity.Students">
+    insert into students (Stuid, Stupwd, Stuno, 
+      Stuname, Stuphone, Stusex, 
+      Stustatus)
+    values (#{stuid,jdbcType=INTEGER}, #{stupwd,jdbcType=VARCHAR}, #{stuno,jdbcType=VARCHAR}, 
+      #{stuname,jdbcType=VARCHAR}, #{stuphone,jdbcType=VARCHAR}, #{stusex,jdbcType=VARCHAR}, 
+      #{stustatus,jdbcType=INTEGER})
+  </insert>
+  
+  <!-- 增加学生基本信息 -->
+  <insert id="insertStudents" parameterType="com.etc.entity.Students">
+    insert into students (Stupwd, Stuno,
+      Stuname, Stuphone, Stusex)
+    values (#{stupwd,jdbcType=VARCHAR}, #{stuno,jdbcType=VARCHAR}, #{stuname,jdbcType=VARCHAR}, #{stuphone,jdbcType=VARCHAR}, #{stusex,jdbcType=VARCHAR}
+     )
+  </insert>
+  
+  
+  
+  <insert id="insertSelective" parameterType="com.etc.entity.Students">
+    insert into students
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="stuid != null">
+        Stuid,
+      </if>
+      <if test="stupwd != null">
+        Stupwd,
+      </if>
+      <if test="stuno != null">
+        Stuno,
+      </if>
+      <if test="stuname != null">
+        Stuname,
+      </if>
+      <if test="stuphone != null">
+        Stuphone,
+      </if>
+      <if test="stusex != null">
+        Stusex,
+      </if>
+      <if test="stustatus != null">
+        Stustatus,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="stuid != null">
+        #{stuid,jdbcType=INTEGER},
+      </if>
+      <if test="stupwd != null">
+        #{stupwd,jdbcType=VARCHAR},
+      </if>
+      <if test="stuno != null">
+        #{stuno,jdbcType=VARCHAR},
+      </if>
+      <if test="stuname != null">
+        #{stuname,jdbcType=VARCHAR},
+      </if>
+      <if test="stuphone != null">
+        #{stuphone,jdbcType=VARCHAR},
+      </if>
+      <if test="stusex != null">
+        #{stusex,jdbcType=VARCHAR},
+      </if>
+      <if test="stustatus != null">
+        #{stustatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 修改信息 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.etc.entity.Students">
+    update students
+    <set>
+      <if test="stupwd != null">
+        Stupwd = #{stupwd,jdbcType=VARCHAR},
+      </if>
+      <if test="stuno != null">
+        Stuno = #{stuno,jdbcType=VARCHAR},
+      </if>
+      <if test="stuname != null">
+        Stuname = #{stuname,jdbcType=VARCHAR},
+      </if>
+      <if test="stuphone != null">
+        Stuphone = #{stuphone,jdbcType=VARCHAR},
+      </if>
+      <if test="stusex != null">
+        Stusex = #{stusex,jdbcType=VARCHAR},
+      </if>
+      <if test="stustatus != null">
+        Stustatus = #{stustatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where Stuid = #{stuid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.etc.entity.Students">
+    update students
+    set Stupwd = #{stupwd,jdbcType=VARCHAR},
+      Stuno = #{stuno,jdbcType=VARCHAR},
+      Stuname = #{stuname,jdbcType=VARCHAR},
+      Stuphone = #{stuphone,jdbcType=VARCHAR},
+      Stusex = #{stusex,jdbcType=VARCHAR},
+      Stustatus = #{stustatus,jdbcType=INTEGER}
+    where Stuid = #{stuid,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 自定义一个模糊查询 和分页的方法实现 -->
+	<select id="selectStudentsByPage" parameterType="com.etc.util.PageBean"
+		resultType="com.etc.entity.Students">
+		select * from students <where>
+		<if test="str!=null">stuname like
+		CONCAT(CONCAT('%', #{str}),'%')</if></where> limit #{start},#{pagesize}
+	</select>
+  <!-- 自定义一个根据准考证获取学生信息的方法实现 -->
+	<select id="selectStudentsBystuno" parameterType="java.lang.String"
+		resultType="com.etc.entity.Students">
+		select * from students where Stuno=#{stuno}
+	</select>
+
+
+    <!-- 查询总记录数 -->
+	<select id="selectStudentsCount" parameterType="com.etc.util.PageBean" resultType="java.lang.Integer">
+
+		select count(*) from students 
+		<where>
+		<if test="str!=null">
+		stuname like 
+		CONCAT(CONCAT('%',
+		#{str}),'%')
+		</if>
+		</where>
+	</select>
+	
+  
+  
+</mapper>

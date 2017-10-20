@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etc.dao.PaperMapper">
+  <resultMap id="BaseResultMap" type="com.etc.entity.Paper">
+    <result column="Paperid" jdbcType="INTEGER" property="paperid" />
+    <result column="Orderno" jdbcType="INTEGER" property="orderno" />
+    
+    
+     <association property="tpaper" column="tPaperid" javaType="com.etc.entity.Tpaper">
+    <id property="tpaperid" column="Tpaperid"/>
+    <result property="tname" column="Tname"/>
+    <result property="exatype.exid" column="Exid"/>
+    </association>
+    
+     <association property="questions" column="questionid" javaType="com.etc.entity.Questions">
+    <id column="Questionsid" jdbcType="INTEGER" property="questionsid" />
+    <result column="Content" jdbcType="VARCHAR" property="content" />
+    <result column="Keya" jdbcType="VARCHAR" property="keya" />
+    <result column="Keyb" jdbcType="VARCHAR" property="keyb" />
+    <result column="Keyc" jdbcType="VARCHAR" property="keyc" />
+    <result column="Keyd" jdbcType="VARCHAR" property="keyd" />
+    <result column="Answers" jdbcType="VARCHAR" property="answers" />
+    <result column="Score" jdbcType="INTEGER" property="score" />
+    <result column="Status" jdbcType="INTEGER" property="status" />
+    <result column="Exid" jdbcType="INTEGER" property="exaType.exid"/>
+    <result column="Typeid" jdbcType="INTEGER" property="qType.typeid"/>
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    Paperid, Tpaperid, Orderno, Questionid
+  </sql>
+ <!--  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from paper
+    where Paperid = #{paperid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from paper
+    where Paperid = #{paperid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.etc.entity.Paper">
+    insert into paper (Paperid, Tpaperid, Orderno, 
+      Questionid)
+    values (#{paperid,jdbcType=INTEGER}, #{tpaperid,jdbcType=INTEGER}, #{orderno,jdbcType=INTEGER}, 
+      #{questionid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.etc.entity.Paper">
+    insert into paper
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="paperid != null">
+        Paperid,
+      </if>
+      <if test="tpaperid != null">
+        Tpaperid,
+      </if>
+      <if test="orderno != null">
+        Orderno,
+      </if>
+      <if test="questionid != null">
+        Questionid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="paperid != null">
+        #{paperid,jdbcType=INTEGER},
+      </if>
+      <if test="tpaperid != null">
+        #{tpaperid,jdbcType=INTEGER},
+      </if>
+      <if test="orderno != null">
+        #{orderno,jdbcType=INTEGER},
+      </if>
+      <if test="questionid != null">
+        #{questionid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.etc.entity.Paper">
+    update paper
+    <set>
+      <if test="tpaperid != null">
+        Tpaperid = #{tpaperid,jdbcType=INTEGER},
+      </if>
+      <if test="orderno != null">
+        Orderno = #{orderno,jdbcType=INTEGER},
+      </if>
+      <if test="questionid != null">
+        Questionid = #{questionid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where Paperid = #{paperid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.etc.entity.Paper">
+    update paper
+    set Tpaperid = #{tpaperid,jdbcType=INTEGER},
+      Orderno = #{orderno,jdbcType=INTEGER},
+      Questionid = #{questionid,jdbcType=INTEGER}
+    where Paperid = #{paperid,jdbcType=INTEGER}
+  </update> -->
+  
+  <!-- 加载对应试题的试卷信息 -->
+ <select id="selectPaperByid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  select tp.Tpaperid,tp.Tname ,p.Orderno,p.Questionid,q.Content,q.Keya,q.Keyb,q.Keyc,q.Keyd,q.Answers,q.Score,q.Questionsid,q.Typeid  from paper p inner join questions q on
+
+p.Questionid=q.Questionsid inner  join tpaper tp on tp.Tpaperid=p.Tpaperid where p.Tpaperid=#{Tpaperid} ORDER BY Orderno 
+  </select>
+  
+</mapper>

@@ -1,0 +1,63 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+
+<jsp:include flush="true" page="../top.jsp"></jsp:include>
+
+
+<div class="main-content">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <script type="text/javascript">
+            try {
+                ace.settings.check('breadcrumbs', 'fixed')
+            } catch (e) {}
+        </script>
+
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home home-icon"></i>
+                <a href="<%=request.getContextPath()%>/student/index">首页</a>
+            </li>
+            <li>
+            	<a href="/student/exam/list.do">考试列表</a>
+            </li>
+            <li class="active">考试说明</li>
+        </ul>
+        <!-- .breadcrumb -->
+    </div>
+
+    <div class="page-content">
+        <div class="page-header center">
+            <h1>
+				考试说明
+			</h1>
+        </div>
+        <!-- /.page-header -->
+		<center>
+		<div class="message">${message}</div>
+		<table width="600" height="300"  border="1" bordercolor="#3D7BA3" align="center" cellpadding="30" cellspacing="0">
+			<tr bgcolor="FFFFFF" align="left" valign="top">
+		      <td>
+		      	<center>
+		      		《${subject.name}》
+		      	</center>
+		      	<br/>
+		      	考试时间：${subject.time}分钟<br/><br/>
+		      	考试题数：${subject.totalnum}道<br/><br/>   	
+		      	考试分数：${subject.totalscore}分<br/><br/>      	      	
+		      	考试介绍：${subject.intro}<br/><br/>
+		      	考试要求：诚信考试,请勿作弊!<br/><br/>
+		      	温馨提醒：考试中请不要访问其他页面,以免影响考试正常进行!<br/><br/><br/>
+				<center>	
+					<form action="<%=request.getContextPath()%>/student/exam/start" method="post">
+						<input type="submit" class="btn btn-info" value="开始考试">
+					</form>
+				</center>
+		      </td>
+		 	</tr>    
+		</table>
+		</center>  
+    </div>
+    <!-- /.page-content -->
+</div>
+<!-- /.main-content -->
+
+<jsp:include flush="true" page="/student/studentbottom.jsp"></jsp:include>

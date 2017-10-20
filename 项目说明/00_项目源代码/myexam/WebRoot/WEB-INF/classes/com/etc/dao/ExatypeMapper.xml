@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etc.dao.ExatypeMapper">
+  <resultMap id="BaseResultMap" type="com.etc.entity.Exatype">
+    <id column="Exid" jdbcType="INTEGER" property="exid" />
+    <result column="Exatype" jdbcType="VARCHAR" property="exatype" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    Exid, Exatype
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from exatype
+    where Exid = #{exid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from exatype
+    where Exid = #{exid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.etc.entity.Exatype">
+    insert into exatype (Exid, Exatype)
+    values (#{exid,jdbcType=INTEGER}, #{exatype,jdbcType=VARCHAR})
+  </insert>
+  <!-- 增加 -->
+  <insert id="insertSelective" parameterType="com.etc.entity.Exatype">
+    insert into exatype
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="exid != null">
+        Exid,
+      </if>
+      <if test="exatype != null">
+        Exatype,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="exid != null">
+        #{exid,jdbcType=INTEGER},
+      </if>
+      <if test="exatype != null">
+        #{exatype,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+   <!--修改 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.etc.entity.Exatype">
+    update exatype
+    <set>
+      <if test="exatype != null">
+        Exatype = #{exatype,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Exid = #{exid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.etc.entity.Exatype">
+    update exatype
+    set Exatype = #{exatype,jdbcType=VARCHAR}
+    where Exid = #{exid,jdbcType=INTEGER}
+  </update>
+
+  <!-- 查询Exatype总记录数 -->
+  <select id="queryExaType" parameterType="com.etc.util.PageBean" resultType="java.lang.Integer">
+  select count(*) from  exatype
+  </select>
+  
+    <select id="selectAllExatype" resultType="com.etc.entity.Exatype">
+  select Exid,Exatype from exatype
+  </select>
+  
+  <!-- 自定义一个模糊查询 和分页的方法实现 -->
+	<select id="selectExatypeByPage" parameterType="com.etc.util.PageBean"
+		resultType="com.etc.entity.Exatype">
+		select exatype.Exid,exatype.Exatype  from exatype <where>
+		<!-- <if test="str!=null"> -->Exatype like
+		CONCAT(CONCAT('%', #{str}),'%')<!-- </if> --></where> limit #{start},#{pagesize}
+	</select>
+ <!-- 批量删除 -->
+   <delete id="delete" parameterType="java.lang.String" >
+		delete from exatype where Exid in 
+		 <foreach item="ids" index="index" collection="array"
+      open="(" separator="," close=")">
+        #{ids}
+    </foreach>
+    </delete>
+    
+ <!--    学生端在线考试查询考试类型 -->
+      <select id="queryexaType"  resultType="com.etc.entity.Exatype">
+  select exatype.Exid,exatype.Exatype from  exatype
+  </select>
+</mapper>

@@ -1,0 +1,24 @@
+# Global logging configuration
+log4j.rootLogger=debug, stdout
+# MyBatis logging configuration...
+log4j.logger.com.etc.dao.UsersMapper=TRACE
+log4j.logger.com.etc.dao.NoticeMapper=TRACE
+# Console output...
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n
+### log HQL parse trees
+#log4j.logger.org.hibernate.hql=debug
+
+### log cache activity ###
+#log4j.logger.org.hibernate.cache=debug
+
+### log transaction activity
+#log4j.logger.org.hibernate.transaction=debug
+
+### log JDBC resource acquisition
+#log4j.logger.org.hibernate.jdbc=debug
+
+### enable the following line if you want to track down connection ###
+### leakages when using DriverManagerConnectionProvider ###
+#log4j.logger.org.hibernate.connection.DriverManagerConnectionProvider=trace
