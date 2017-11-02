@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etc.dao.BackupsMapper">
+	<resultMap id="BaseResultMap" type="com.etc.entity.Backups">
+		<id column="Backupsid" jdbcType="INTEGER" property="backupsid" />
+		<result column="Exatime" jdbcType="INTEGER" property="exatime" />
+		<result column="Surplustime" jdbcType="INTEGER" property="surplustime" />
+		<result column="Bktype" jdbcType="INTEGER" property="bktype" />
+		<association property="student" column="stuid"
+			javaType="com.etc.entity.Students">
+			<id column="Stuid" jdbcType="INTEGER" property="stuid" />
+			<result column="Stupwd" jdbcType="VARCHAR" property="stupwd" />
+			<result column="Stuno" jdbcType="VARCHAR" property="stuno" />
+			<result column="Stuname" jdbcType="VARCHAR" property="stuname" />
+			<result column="Stuphone" jdbcType="VARCHAR" property="stuphone" />
+			<result column="Stusex" jdbcType="VARCHAR" property="stusex" />
+			<result column="Stustatus" jdbcType="INTEGER" property="stustatus" />
+		</association>
+		<association property="tpaper" column="Tpaperid"
+			javaType="com.etc.entity.Tpaper">
+			<id column="Tpaperid" jdbcType="INTEGER" property="tpaperid" />
+			<result column="Exid" jdbcType="INTEGER" property="exatype.exid" />
+			<result column="Tname" jdbcType="VARCHAR" property="tname" />
+		</association>
+	</resultMap>
+	<resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+		type="com.etc.entity.Backups">
+		<result column="Answers" jdbcType="LONGVARCHAR" property="answers" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		Backupsid, Stuid, Tpaperid, Exatime, Surplustime, Bktype
+	</sql>
+	<sql id="Blob_Column_List">
+		Answers
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from backups
+		where Backupsid = #{backupsid,jdbcType=INTEGER}
+	</select>
+
+	<!-- 自定义一个模糊查询 和分页的方法实现 -->
+	<select id="selectAllBackups" parameterType="com.etc.util.PageBean"
+		resultMap="ResultMapWithBLOBs">
+		SELECT
+		backups.Backupsid,
+		backups.Stuid,
+		backups.Tpaperid,
+		backups.Answers,
+		backups.Exatime,
+		backups.Surplustime,
+		backups.Bktype,
+		students.Stuid,
+		students.Stupwd,
+		students.Stuno,
+		students.Stuname,
+		students.Stuphone,
+		students.Stusex,
+		students.Stustatus,
+		tpaper.Tpaperid,
+		tpaper.Exid,
+		tpaper.Tname
+		from backups inner join students on backups.Stuid= students.Stuid inner
+		join tpaper on backups.Tpaperid= tpaper.Tpaperid
+		limit #{start},#{pagesize}
+	</select>
+
+
+	<!-- 查询总记录数 -->
+	<select id="selectBackupsCount" parameterType="com.etc.util.PageBean"
+		resultType="java.lang.Integer">
+
+		select count(*) from backups
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from backups
+		where Backupsid in
+		<foreach item="id" index="index" collection="array" open="("
+			separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	<insert id="insert" parameterType="com.etc.entity.Backups">
+		insert into backups (Backupsid, Stuid, Tpaperid,
+		Exatime, Surplustime, Bktype,
+		Answers)
+		values (#{backupsid,jdbcType=INTEGER}, #{student.stuid,jdbcType=INTEGER},
+		#{tpaper.tpaperid,jdbcType=INTEGER},
+		#{exatime,jdbcType=INTEGER}, #{surplustime,jdbcType=INTEGER}, #{bktype,jdbcType=INTEGER},
+		#{answers,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.etc.entity.Backups">
+		insert into backups
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="backupsid != null">
+				Backupsid,
+			</if>
+			<if test="student.stuid != null">
+				Stuid,
+			</if>
+			<if test="tpaper.tpaperid != null">
+				Tpaperid,
+			</if>
+			<if test="exatime != null">
+				Exatime,
+			</if>
+			<if test="surplustime != null">
+				Surplustime,
+			</if>
+			<if test="bktype != null">
+				Bktype,
+			</if>
+			<if test="answers != null">
+				Answers,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="backupsid != null">
+				#{backupsid,jdbcType=INTEGER},
+			</if>
+			<if test="student.stuid != null">
+				#{student.stuid,jdbcType=INTEGER},
+			</if>
+			<if test="tpaper.tpaperid != null">
+				#{tpaper.tpaperid,jdbcType=INTEGER},
+			</if>
+			<if test="exatime != null">
+				#{exatime,jdbcType=INTEGER},
+			</if>
+			<if test="surplustime != null">
+				#{surplustime,jdbcType=INTEGER},
+			</if>
+			<if test="bktype != null">
+				#{bktype,jdbcType=INTEGER},
+			</if>
+			<if test="answers != null">
+				#{answers,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.etc.entity.Backups">
+		update backups
+		<set>
+			<if test="student.stuid != null">
+				Stuid = #{student.stuid,jdbcType=INTEGER},
+			</if>
+			<if test="tpaper.tpaperid != null">
+				Tpaperid = #{tpaper.tpaperid,jdbcType=INTEGER},
+			</if>
+			<if test="exatime != null">
+				Exatime = #{exatime,jdbcType=INTEGER},
+			</if>
+			<if test="surplustime != null">
+				Surplustime = #{surplustime,jdbcType=INTEGER},
+			</if>
+			<if test="bktype != null">
+				Bktype = #{bktype,jdbcType=INTEGER},
+			</if>
+			<if test="answers != null">
+				Answers = #{answers,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where Backupsid = #{backupsid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.etc.entity.Backups">
+		update backups
+		set Stuid = #{student.stuid,jdbcType=INTEGER},
+		Tpaperid = #{tpaper.tpaperid,jdbcType=INTEGER},
+		Exatime = #{exatime,jdbcType=INTEGER},
+		Surplustime = #{surplustime,jdbcType=INTEGER},
+		Bktype = #{bktype,jdbcType=INTEGER},
+		Answers = #{answers,jdbcType=LONGVARCHAR}
+		where Backupsid = #{backupsid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.etc.entity.Backups">
+		update backups
+		set Stuid = #{student.stuid,jdbcType=INTEGER},
+		Tpaperid = #{tpaper.tpaperid,jdbcType=INTEGER},
+		Exatime = #{exatime,jdbcType=INTEGER},
+		Surplustime = #{surplustime,jdbcType=INTEGER},
+		Bktype = #{bktype,jdbcType=INTEGER}
+		Answers = #{answers,jdbcType=LONGVARCHAR}
+		where Backupsid = #{backupsid,jdbcType=INTEGER}
+	</update>
+
+<!-- 查询是否存在该用户对应的试卷，用于判断是否是增加对应考试备份，还是只是修改对应备份信息，如答案等 -->
+	<select id="selectCount" parameterType="com.etc.entity.Backups"
+		resultType="java.lang.Integer">
+		select count(*) from backups
+		<where>
+			<if test="tpaper.tpaperid!=null">
+				Tpaperid =#{tpaper.tpaperid}
+			</if>
+			<if test="student.stuid!=null">
+				and Stuid=#{student.stuid}
+			</if>
+		</where>
+	</select>
+
+
+	<update id="updateBackups" parameterType="com.etc.entity.Backups">
+		update backups
+		<set>
+			<if test="student.stuid != null">
+				Stuid = #{student.stuid,jdbcType=INTEGER},
+			</if>
+			<if test="tpaper.tpaperid != null">
+				Tpaperid = #{tpaper.tpaperid,jdbcType=INTEGER},
+			</if>
+			<if test="exatime != null">
+				Exatime = #{exatime,jdbcType=INTEGER},
+			</if>
+			<if test="surplustime != null">
+				Surplustime = #{surplustime,jdbcType=INTEGER},
+			</if>
+			<if test="bktype != null">
+				Bktype = #{bktype,jdbcType=INTEGER},
+			</if>
+			<if test="answers != null">
+				Answers = #{answers,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where Tpaperid = #{tpaper.tpaperid,jdbcType=INTEGER} and Stuid =
+		#{student.stuid,jdbcType=INTEGER}
+	</update>
+
+<!-- 查询关于该学生的考试备份信息 -->
+	<select id="selectAll" parameterType="com.etc.entity.Students"
+		resultMap="BaseResultMap">
+		select backups.*,tpaper.Tpaperid,tpaper.Tname from backups inner join
+		tpaper on backups.Tpaperid=tpaper.Tpaperid
+		<where>
+			<if test="stuid!=null">
+				Stuid=#{stuid}
+			</if>
+		</where>
+	</select>
+
+
+</mapper>

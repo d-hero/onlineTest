@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etc.dao.QuestionsMapper">
+  <resultMap id="BaseResultMap" type="com.etc.entity.Questions">
+    <id column="Questionsid" jdbcType="INTEGER" property="questionsid" />
+
+    <result column="Content" jdbcType="VARCHAR" property="content" />
+    <result column="Keya" jdbcType="VARCHAR" property="keya" />
+    <result column="Keyb" jdbcType="VARCHAR" property="keyb" />
+    <result column="Keyc" jdbcType="VARCHAR" property="keyc" />
+    <result column="Keyd" jdbcType="VARCHAR" property="keyd" />
+    <result column="Answers" jdbcType="VARCHAR" property="answers" />
+
+    <result column="Score" jdbcType="INTEGER" property="score" />
+    <result column="Status" jdbcType="INTEGER" property="status" />
+   <!-- 表关联 -->
+    <association property="exaType" column="Exid" javaType="com.etc.entity.Exatype">
+    <id column="Exid" property="exid"/>
+    <result column="Exatype" property="exatype"/>
+    </association>
+    
+        <association property="qType" column="Typeid" javaType="com.etc.entity.Qtype">
+    <id column="Typeid" property="typeid"/>
+    <result column="Typename" property="typename"/>
+    </association>
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    Questionsid, Exid, Content, Keya, Keyb, Keyc, Keyd, Answers, Typeid, Score, Status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from questions
+    where Questionsid = #{questionsid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from questions
+    where Questionsid = #{questionsid,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteByPrimaryallKey" >
+    delete from questions 
+    where Questionsid in
+     <foreach  item="ids"  index="index" collection="array" 
+   open="(" separator="," close=")" >
+   #{ids}
+   </foreach>
+  </delete>
+  <insert id="insert" parameterType="com.etc.entity.Questions">
+    insert into questions ( Exid, Content, 
+      Keya, Keyb, Keyc, Keyd, 
+      Answers, Typeid, Score, 
+      Status)
+    values (#{exaType.exid,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
+      #{keya,jdbcType=VARCHAR}, #{keyb,jdbcType=VARCHAR}, #{keyc,jdbcType=VARCHAR}, #{keyd,jdbcType=VARCHAR}, 
+      #{answers,jdbcType=VARCHAR}, #{qType.typeid,jdbcType=INTEGER}, #{score,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.etc.entity.Questions">
+    insert into questions
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="questionsid != null">
+        Questionsid,
+      </if>
+      <if test="exid != null">
+        Exid,
+      </if>
+      <if test="content != null">
+        Content,
+      </if>
+      <if test="keya != null">
+        Keya,
+      </if>
+      <if test="keyb != null">
+        Keyb,
+      </if>
+      <if test="keyc != null">
+        Keyc,
+      </if>
+      <if test="keyd != null">
+        Keyd,
+      </if>
+      <if test="answers != null">
+        Answers,
+      </if>
+      <if test="typeid != null">
+        Typeid,
+      </if>
+      <if test="score != null">
+        Score,
+      </if>
+      <if test="status != null">
+        Status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="questionsid != null">
+        #{questionsid,jdbcType=INTEGER},
+      </if>
+      <if test="exid != null">
+        #{exid,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="keya != null">
+        #{keya,jdbcType=VARCHAR},
+      </if>
+      <if test="keyb != null">
+        #{keyb,jdbcType=VARCHAR},
+      </if>
+      <if test="keyc != null">
+        #{keyc,jdbcType=VARCHAR},
+      </if>
+      <if test="keyd != null">
+        #{keyd,jdbcType=VARCHAR},
+      </if>
+      <if test="answers != null">
+        #{answers,jdbcType=VARCHAR},
+      </if>
+      <if test="typeid != null">
+        #{typeid,jdbcType=INTEGER},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.etc.entity.Questions">
+    update questions
+    <set>
+      <if test="exid != null">
+        Exid = #{exid,jdbcType=INTEGER},
+      </if>
+      <if test="content != null">
+        Content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="keya != null">
+        Keya = #{keya,jdbcType=VARCHAR},
+      </if>
+      <if test="keyb != null">
+        Keyb = #{keyb,jdbcType=VARCHAR},
+      </if>
+      <if test="keyc != null">
+        Keyc = #{keyc,jdbcType=VARCHAR},
+      </if>
+      <if test="keyd != null">
+        Keyd = #{keyd,jdbcType=VARCHAR},
+      </if>
+      <if test="answers != null">
+        Answers = #{answers,jdbcType=VARCHAR},
+      </if>
+      <if test="typeid != null">
+        Typeid = #{typeid,jdbcType=INTEGER},
+      </if>
+      <if test="score != null">
+        Score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        Status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where Questionsid = #{questionsid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.etc.entity.Questions">
+    update questions
+    set Exid = #{exaType.exid,jdbcType=INTEGER},
+      Content = #{content,jdbcType=VARCHAR},
+      Keya = #{keya,jdbcType=VARCHAR},
+      Keyb = #{keyb,jdbcType=VARCHAR},
+      Keyc = #{keyc,jdbcType=VARCHAR},
+      Keyd = #{keyd,jdbcType=VARCHAR},
+      Answers = #{answers,jdbcType=VARCHAR},
+      Typeid = #{qType.typeid,jdbcType=INTEGER},
+      Score = #{score,jdbcType=INTEGER},
+      Status = #{status,jdbcType=INTEGER}
+    where Questionsid = #{questionsid,jdbcType=INTEGER}
+  </update>
+  <!-- 随机生成题目 -->
+  <select id="queryAll" resultMap="BaseResultMap">
+   SELECT questions.Questionsid,questions.Exid,questions.Content,questions.Keya,questions.Keyb,questions.Keyc,questions.Keyd,questions.Answers,questions.Typeid,questions.Score,
+questions.`Status` FROM questions  WHERE Exid=#{0} and Typeid=#{1}  ORDER BY rand() LIMIT #{2} 
+  </select>
+  <select id="queryType" resultType="com.etc.entity.Qtype">
+  select qtype.Typeid,qtype.Typename from  qtype
+  </select>
+  
+   <!-- 自定义一个通过试题类别和考试种类 和分页的方法实现 -->
+	<select id="selectQuestionsByType" parameterType="com.etc.util.PageBeanQuestion"
+		resultMap="BaseResultMap">
+		select * from  Questions where  Exid=#{Exid} and Typeid=#{typeid}
+		limit #{start},#{pagesize} 
+	</select>
+    <!-- 查询总记录数 -->
+	<select id="selectQuestionsCount" parameterType="com.etc.util.PageBeanQuestion" resultType="java.lang.Integer">
+		select count(*) from  Questions where  Exid=#{Exid} and Typeid=#{typeid}
+	</select>
+	<!-- 查询题目的总记录数 -->
+	<select id="selectQuestionsExid" resultType="java.lang.Integer">
+	 select count(*) from Questions where Exid=#{0} and Typeid=#{1}
+	</select>
+	
+	
+	<select id="queryall" resultMap="BaseResultMap">
+ SELECT questions.Questionsid,questions.Exid,questions.Content,questions.Keya,questions.Keyb,questions.Keyc,questions.Keyd,questions.Answers,questions.Typeid,questions.Score,
+questions.Status,exatype.Exid,exatype.Exatype,qtype.Typeid,qtype.Typename FROM questions inner join exatype on questions.Exid=exatype.Exid inner join qtype on questions.Typeid=qtype.Typeid WHERE questions.Typeid=#{0} ORDER BY rand() LIMIT #{1} 
+  </select>
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etc.dao.QtypeMapper">
+  <resultMap id="BaseResultMap" type="com.etc.entity.Qtype">
+    <id column="Typeid" jdbcType="INTEGER" property="typeid" />
+    <result column="Typename" jdbcType="VARCHAR" property="typename" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    Typeid, Typename
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from qtype
+    where Typeid = #{typeid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from qtype
+    where Typeid = #{typeid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.etc.entity.Qtype">
+    insert into qtype (Typeid, Typename)
+    values (#{typeid,jdbcType=INTEGER}, #{typename,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.etc.entity.Qtype">
+    insert into qtype
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="typeid != null">
+        Typeid,
+      </if>
+      <if test="typename != null">
+        Typename,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="typeid != null">
+        #{typeid,jdbcType=INTEGER},
+      </if>
+      <if test="typename != null">
+        #{typename,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.etc.entity.Qtype">
+    update qtype
+    <set>
+      <if test="typename != null">
+        Typename = #{typename,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Typeid = #{typeid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.etc.entity.Qtype">
+    update qtype
+    set Typename = #{typename,jdbcType=VARCHAR}
+    where Typeid = #{typeid,jdbcType=INTEGER}
+  </update>
+</mapper>

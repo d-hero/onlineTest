@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etc.dao.TpaperMapper">
+  <resultMap id="BaseResultMap" type="com.etc.entity.Tpaper">
+    <id column="Tpaperid" jdbcType="INTEGER" property="tpaperid" />
+    <result column="Tname" jdbcType="VARCHAR" property="tname" />
+    <!-- 考试类型表关联 -->
+     <association property="exatype" column="ExId" javaType="com.etc.entity.Exatype">
+    <id property="exid" column="Exid"/>
+    <result property="exatype" column="ExaType"/>
+    </association>
+    
+    <!-- 试卷实体类对应的list映射设置resultMap对应试卷信息 -->
+     <collection property="papers" ofType="com.etc.entity.Paper" resultMap="PaperResultMap" />
+  </resultMap>
+  <!-- 试卷信息的映射 -->
+<resultMap id="PaperResultMap" type="com.etc.entity.Paper">
+    <result column="Paperid" jdbcType="INTEGER" property="paperid" />
+    <result column="Orderno" jdbcType="INTEGER" property="orderno" />
+    
+    
+     <association property="tpaper" column="tPaperid" javaType="com.etc.entity.Tpaper">
+    <id property="tpaperid" column="Tpaperid"/>
+    <result property="tname" column="Tname"/>
+    <result property="exatype.exid" column="Exid"/>
+    </association>
+    
+     <association property="questions" column="questionid" javaType="com.etc.entity.Questions" resultMap="QuestionsResultMap">
+<!--     <id column="Questionsid" jdbcType="INTEGER" property="questionsid" />
+    <result column="Content" jdbcType="VARCHAR" property="content" />
+    <result column="Keya" jdbcType="VARCHAR" property="keya" />
+    <result column="Keyb" jdbcType="VARCHAR" property="keyb" />
+    <result column="Keyc" jdbcType="VARCHAR" property="keyc" />
+    <result column="Keyd" jdbcType="VARCHAR" property="keyd" />
+    <result column="Answers" jdbcType="VARCHAR" property="answers" />
+    <result column="Score" jdbcType="INTEGER" property="score" />
+    <result column="Status" jdbcType="INTEGER" property="status" />
+    <result column="Exid" jdbcType="INTEGER" property="exaType.exid"/>
+    <result column="Typeid" jdbcType="INTEGER" property="qType.typeid"/> -->
+    </association>
+  </resultMap>
+  
+ <!-- 映射试题表 -->
+   <resultMap id="QuestionsResultMap" type="com.etc.entity.Questions">
+    <id column="Questionsid" jdbcType="INTEGER" property="questionsid" />
+
+    <result column="Content" jdbcType="VARCHAR" property="content" />
+    <result column="Keya" jdbcType="VARCHAR" property="keya" />
+    <result column="Keyb" jdbcType="VARCHAR" property="keyb" />
+    <result column="Keyc" jdbcType="VARCHAR" property="keyc" />
+    <result column="Keyd" jdbcType="VARCHAR" property="keyd" />
+    <result column="Answers" jdbcType="VARCHAR" property="answers" />
+
+    <result column="Score" jdbcType="INTEGER" property="score" />
+    <result column="Status" jdbcType="INTEGER" property="status" />
+   <!-- 表关联 -->
+    <association property="exaType" column="Exid" javaType="com.etc.entity.Exatype">
+    <id column="Exid" property="exid"/>
+    <result column="Exatype" property="exatype"/>
+    </association>
+    
+        <association property="qType" column="Typeid" javaType="com.etc.entity.Qtype">
+    <id column="Typeid" property="typeid"/>
+    <result column="Typename" property="typename"/>
+    </association>
+  </resultMap>
+
+
+  <sql id="Base_Column_List">
+    Tpaperid, Exid, Tname
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tpaper
+    where Tpaperid = #{tpaperid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tpaper
+    where Tpaperid = #{tpaperid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.etc.entity.Tpaper">
+    insert into tpaper (Tpaperid, Exid, Tname
+      )
+    values (#{tpaperid,jdbcType=INTEGER}, #{exid,jdbcType=INTEGER}, #{tname,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.etc.entity.Tpaper">
+    insert into tpaper
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tpaperid != null">
+        Tpaperid,
+      </if>
+      <if test="exid != null">
+        Exid,
+      </if>
+      <if test="tname != null">
+        Tname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tpaperid != null">
+        #{tpaperid,jdbcType=INTEGER},
+      </if>
+      <if test="exid != null">
+        #{exid,jdbcType=INTEGER},
+      </if>
+      <if test="tname != null">
+        #{tname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.etc.entity.Tpaper">
+    update tpaper
+    <set>
+      <if test="exid != null">
+        Exid = #{exid,jdbcType=INTEGER},
+      </if>
+      <if test="tname != null">
+        Tname = #{tname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Tpaperid = #{tpaperid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.etc.entity.Tpaper">
+    update tpaper
+    set Exid = #{exid,jdbcType=INTEGER},
+      Tname = #{tname,jdbcType=VARCHAR}
+    where Tpaperid = #{tpaperid,jdbcType=INTEGER}
+  </update>
+  
+  
+   <!-- 生成对应试卷试题 学生端考试-->
+ 
+ <select id="selectAllTpaper" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+ select t.Tpaperid ,t.Exid,t.Tname,e.Exatype from tpaper t INNER JOIN exatype e on t.Exid=e.Exid where t.Exid=#{Exid}
+ </select>
+ 
+   <!-- 加载对应试题的试卷信息 -->
+ <select id="selectPaperByid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  select tp.Tpaperid,tp.Tname ,p.Orderno,p.Questionid,q.Content,q.Keya,q.Keyb,q.Keyc,q.Keyd,q.Answers,q.Score,q.Questionsid,q.Typeid ,qt.Typeid,qt.Typename from paper p inner join questions q on
+
+p.Questionid=q.Questionsid inner  join tpaper tp on tp.Tpaperid=p.Tpaperid inner  join qtype qt on qt.Typeid=q.typeid  where p.Tpaperid=#{Tpaperid}
+  </select>
+  
+</mapper>

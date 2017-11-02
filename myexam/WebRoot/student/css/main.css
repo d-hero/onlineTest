@@ -1,0 +1,23 @@
+@CHARSET "UTF-8";
+
+.d1 {
+	font-family: Arial;
+	font-style: italic;
+	font-weight: bold;
+	border: 0;
+	letter-spacing: 2px;
+}
+
+.d2{
+	 background-color:blue;
+	 padding-left: 200px;
+}
+.d21{
+	
+}
+
+.full-slider {
+	border-top: 5px solid #186C96;
+	background: #2098D3;
+	background-image: url(./images/bg.png);
+}
